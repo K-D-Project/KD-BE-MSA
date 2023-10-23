@@ -1,0 +1,29 @@
+app:
+  name: ui
+  version: 1.0.0
+
+
+
+## RDB Property (AWS RDS), MongoDB, Redis
+spring:
+  cloud:
+    config:
+        enabled: false
+  datasource:
+    data:
+      mongodb:
+      host: 54.180.24.185
+      port: 27017
+      database: kdbe
+  sql:
+    init:
+      encoding: UTF-8
+
+logging:
+  level:
+    com.example.kdbe: debug
+
+
+server:
+  port: 9034
+
