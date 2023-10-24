@@ -1,10 +1,13 @@
 package com.example.ui.repository;
 
 import com.example.ui.model.component.SpaceUi;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
-public interface SpaceUiRepository extends MongoRepository<SpaceUi,String> {
-    public SpaceUi findByUuid(int uuid);
+@Repository
+public interface SpaceUiRepository extends ReactiveMongoRepository<SpaceUi,String> {
+    Mono<SpaceUi> findByUuid(int uuid);
 
-    public SpaceUi findByType(String type);
+
 }

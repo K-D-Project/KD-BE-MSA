@@ -4,14 +4,13 @@ app:
 
 
 
-## RDB Property (AWS RDS), MongoDB, Redis
+## MongoDB
 spring:
   cloud:
     config:
         enabled: false
-  datasource:
-    data:
-      mongodb:
+  data:
+    mongodb:
       host: 54.180.24.185
       port: 27017
       database: kdbe
