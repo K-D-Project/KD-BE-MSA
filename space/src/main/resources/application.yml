@@ -1,0 +1,37 @@
+app:
+  name: space
+  version: 1.0.0
+
+
+
+## MongoDB
+## RDB Property (AWS RDS), MongoDB, Redis
+spring:
+  application:
+    name: space
+  cloud:
+    config:
+      enabled: false
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://toy-db.c0yxo9fizkk3.ap-northeast-2.rds.amazonaws.com:3306/space?useUnicode=true&characterEncoding=UTF-8
+    username: admin
+    password: rlatpdud13795
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    show-sql: true
+    format-sql: true
+  sql:
+    init:
+      encoding: UTF-8
+
+logging:
+  level:
+    com.example.space: debug
+
+
+server:
+  port: 9035
+

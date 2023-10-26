@@ -31,6 +31,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '4.0.3'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter'
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	compileOnly 'org.projectlombok:lombok'
@@ -38,6 +39,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+	// https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
+	implementation group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '2.1.2'
 }
 
 dependencyManagement {

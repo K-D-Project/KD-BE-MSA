@@ -2,8 +2,10 @@ package com.example.ui.web;
 
 import com.example.ui.model.component.SpaceUi;
 import com.example.ui.model.response.ResultData;
+import com.example.ui.model.response.UiDomainDto;
 import com.example.ui.service.SpaceUiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,11 +22,22 @@ public class SpaceUiController {
     private final SpaceUiService spaceUiService;
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<ResultData>> get(@PathVariable int id){
-       Mono<SpaceUi> spaceUiMono = spaceUiService.get(id);
+    public Mono<ResponseEntity<ResultData>> getAsync(@PathVariable int id){
+        Mono<UiDomainDto> spaceUiMono = spaceUiService.getAsync(id);
         return spaceUiMono
-                .map(resource -> ResultData.ok(resource));
+                .map(resource -> ResultData.ok(resource))
+                .defaultIfEmpty(ResultData.ok("empty"));
 
     }
+
+    @GetMapping("/Sync/{id}")
+    public ResponseEntity<ResultData> getSync(@PathVariable int id){
+        UiDomainDto uiDomainDto = spaceUiService.getSync(id);
+        return ResultData.ok(uiDomainDto);
+
+    }
+
+
+
 
 }
