@@ -27,14 +27,12 @@ public class SpaceUiController {
         return spaceUiMono
                 .map(resource -> ResultData.ok(resource))
                 .defaultIfEmpty(ResultData.ok("empty"));
-
     }
 
     @GetMapping("/Sync/{id}")
     public ResponseEntity<ResultData> getSync(@PathVariable int id){
         UiDomainDto uiDomainDto = spaceUiService.getSync(id);
         return ResultData.ok(uiDomainDto);
-
     }
 
 

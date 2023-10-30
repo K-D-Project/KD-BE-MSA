@@ -24,7 +24,7 @@ public class SpaceUi implements Serializable {
     private int uuid;
     private String type;
     private Property property;
-    private Object domainData;
+
     // Getter, Setter, Constructors
 
     @Getter

@@ -20,6 +20,8 @@ spring:
     init:
       encoding: UTF-8
 
+
+
 logging:
   level:
     com.example.ui: debug

@@ -1,5 +1,7 @@
 package com.example.ui.service.impl;
+import com.example.ui.messagequeue.KafkaProducer;
 import com.example.ui.model.component.SpaceUi;
+import com.example.ui.model.response.MessageDto;
 import com.example.ui.model.response.SpaceDto;
 import com.example.ui.model.response.UiDomainDto;
 import com.example.ui.repository.SpaceUiRepository;
@@ -20,7 +22,7 @@ public class SpaceUiServiceImpl implements SpaceUiService {
 
     private final SpaceUiRepository spaceUiRepository;
     private final WebClient client;
-    private final ObjectMapper mapper;
+    private final KafkaProducer kafkaProducer;
     @Override
     public Mono<UiDomainDto> getAsync(int id) {
         Mono<SpaceUi> spaceUi = spaceUiRepository.findByUuid(id);
@@ -29,6 +31,13 @@ public class SpaceUiServiceImpl implements SpaceUiService {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<EntityModel<SpaceDto>>(){});
+        kafkaProducer.send("test",MessageDto.builder()
+                .id(1L)
+                .build());
+
+        kafkaProducer.send("testSecond",MessageDto.builder()
+                .id(2L)
+                .build());
 
         return Mono.zip(spaceUi, spaceDto)
                 .map(tuple -> {
