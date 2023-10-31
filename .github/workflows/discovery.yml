@@ -35,8 +35,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     - name: Make Gradle wrapper script executable
-        run: |
-        chmod +x discovery/./gradlew
+      run: |
+          chmod +x discovery/./gradlew
 
     - name: Build with Gradle
       run: ./gradlew build
