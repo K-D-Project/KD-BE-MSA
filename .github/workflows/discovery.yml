@@ -39,7 +39,7 @@ jobs:
           chmod +x discovery/./gradlew
 
     - name: Build with Gradle
-      run: cd KD-BE-MSA/discovery 
+      run: cd "KD-BE-MSA/discovery" 
           ./gradlew build
 
     - name: Login to Docker Hub
