@@ -1,3 +1,7 @@
+app:
+  name: discovery
+  version: 1.0.0
+
 server:
   port: 8761
 
