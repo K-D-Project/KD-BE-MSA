@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class KafkaConsumer {
 
     }
 
+    @RetryableTopic
     @KafkaListener(topics = "testSecond")
     public void update(String kafkaMessage){
         log.info("Kafka Message : ->" + kafkaMessage);
@@ -51,6 +53,7 @@ public class KafkaConsumer {
         ObjectMapper mapper = new ObjectMapper();
         try{
             map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>(){});
+
         }catch(JsonProcessingException ex){
             ex.printStackTrace();
         }
