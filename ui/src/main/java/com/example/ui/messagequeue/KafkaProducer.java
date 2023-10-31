@@ -24,7 +24,7 @@ public class KafkaProducer {
         }
 
         kafkaTemplate.send(topic, jsonInString);
-        log.info("Kafka Producer sent data from the Ui microservice: " + messageDto);
+        log.info("Kafka Producer sent data from the Ui microservice:: " + messageDto);
 
         return messageDto;
     }

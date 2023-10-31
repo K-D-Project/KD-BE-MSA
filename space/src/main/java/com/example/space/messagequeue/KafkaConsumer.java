@@ -47,8 +47,7 @@ public class KafkaConsumer {
     @RetryableTopic
     @KafkaListener(topics = "testSecond")
     public void update(String kafkaMessage){
-        log.info("Kafka Message : ->" + kafkaMessage);
-
+        log.info("Kafka Message : ->->" + kafkaMessage);
         Map<Object, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         try{
