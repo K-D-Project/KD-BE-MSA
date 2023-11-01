@@ -62,7 +62,7 @@ jobs:
         key: ${{ secrets.SECRET_PEMKEY }}
         port: 22
         script: |
-          sudo docker pull discovery:latest
+          sudo docker pull kimkagyun/discovery:latest
           CONTAINER_NAME=discovery
           if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
               echo "컨테이너가 이미 실행 중입니다. 제거 중..."
