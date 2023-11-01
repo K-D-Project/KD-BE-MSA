@@ -2,44 +2,71 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Gradle Package
+name: Java CI with Gradle
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'ui/**'  
+  pull_request:
+    types:
+      - closed
+    branches: [ "master" ]
+    paths:
+      - 'ui/**'  
+
+permissions:
+  contents: read
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 11
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
+    - name: Make Gradle wrapper script executable
+      run: |
+          chmod +x ui/./gradlew
 
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-      with:
-        arguments: build
+      run: | 
+          cd ui
+          ./gradlew build
+    - name: Login to Docker Hub
+      run: echo ${{ secrets.SECRET_PASSWORD }} | docker login -u ${{ secrets.SECRET_ID }} --password-stdin
 
-    # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle
-    - name: Publish to GitHub Packages
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+    - name: Set up Docker Buildx
+      run: docker buildx create --use
+
+    - name: Build and Push Docker Image with Buildx
+      run: |
+        cd ui
+        docker buildx build -t kimkagyun/ui:latest .
+        docker buildx build --push -t kimkagyun/ui:latest .
+
+    - name: SSH into EC2 and Deploy
+      uses: appleboy/ssh-action@master
       with:
-        arguments: publish
-      env:
-        USERNAME: ${{ github.actor }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        host: ${{ secrets.HOST }}
+        username: ubuntu
+        key: ${{ secrets.SECRET_PEMKEY }}
+        port: 22
+        script: |
+          sudo docker pull kimkagyun/ui:latest
+          CONTAINER_NAME=ui
+          if [ "$(sudo docker ps -q -f name=$CONTAINER_NAME)" ]; then
+              echo "컨테이너가 이미 실행 중입니다. 제거 중..."
+              sudo docker stop $CONTAINER_NAME
+              sudo docker rm $CONTAINER_NAME
+          fi
+          sudo docker run -d -p 80:8080 --name ui kimkagyun/ui:latest
