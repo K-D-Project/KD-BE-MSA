@@ -63,8 +63,12 @@ jobs:
         port: 22
         script: |
           sudo docker pull discovery:latest
-          sudo docker stop discovery
-          sudo docker rm discovery
+          CONTAINER_NAME=discovery
+          if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
+              echo "컨테이너가 이미 실행 중입니다. 제거 중..."
+              docker stop $CONTAINER_NAME
+              docker rm $CONTAINER_NAME
+          fi
           sudo docker run -d -p 80:8080 --name discovery discovery:latest
 
 
