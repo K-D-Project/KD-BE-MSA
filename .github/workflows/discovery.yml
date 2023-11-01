@@ -64,7 +64,7 @@ jobs:
         script: |
           sudo docker pull kimkagyun/discovery:latest
           CONTAINER_NAME=discovery
-          if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
+          if [ "$(sudo docker ps -q -f name=$CONTAINER_NAME)" ]; then
               echo "컨테이너가 이미 실행 중입니다. 제거 중..."
               sudo docker stop $CONTAINER_NAME
               sudo docker rm $CONTAINER_NAME
