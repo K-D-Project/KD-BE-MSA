@@ -51,8 +51,8 @@ jobs:
     - name: Build and Push Docker Image with Buildx
       run: |
         cd discovery
-        docker buildx build -t discovery:latest .
-        docker buildx build --push -t discovery:latest .
+        docker buildx build -t kimkagyun/discovery:latest .
+        docker buildx build --push -t kimkagyun/discovery:latest .
 
     - name: SSH into EC2 and Deploy
       uses: appleboy/ssh-action@master
