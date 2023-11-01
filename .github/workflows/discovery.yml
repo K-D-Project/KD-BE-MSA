@@ -50,6 +50,7 @@ jobs:
 
     - name: Build and Push Docker Image with Buildx
       run: |
+        cd discovery
         docker buildx build -t discovery:latest .
         docker buildx build --push -t discovery:latest .
 
