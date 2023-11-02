@@ -1,0 +1,82 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'space/**'  
+  pull_request:
+    types:
+      - closed
+    branches: [ "master" ]
+    paths:
+      - 'space/**'  
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Make Gradle wrapper script executable
+      run: |
+          chmod +x space/./gradlew
+
+    - name: Build with Gradle
+      run: | 
+          cd space
+          ./gradlew build
+    - name: Login to Docker Hub
+      run: echo ${{ secrets.SECRET_PASSWORD }} | docker login -u ${{ secrets.SECRET_ID }} --password-stdin
+
+    - name: Set up Docker Buildx
+      run: docker buildx create --use
+
+    - name: Build and Push Docker Image with Buildx
+      run: |
+        cd space
+        docker buildx build -t kimkagyun/space:latest .
+        docker buildx build --push -t kimkagyun/space:latest .
+
+    - name: SSH into EC2 and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ubuntu
+        key: ${{ secrets.SECRET_PEMKEY }}
+        port: 22
+        script: |
+          IMAGE_NAME="kimkagyun/space"
+          IMAGE_TAG="latest"
+          CONTAINER_NAME=space
+
+          if [ "$(sudo docker ps -q -f name=$CONTAINER_NAME)" ]; then
+              sudo docker stop $CONTAINER_NAME
+              sudo docker rm $CONTAINER_NAME
+          fi
+          
+          if [ "$(sudo docker images -q $IMAGE_NAME:$IMAGE_TAG )" ]; then
+              sudo docker rmi $IMAGE_NAME:$IMAGE_TAG
+          fi
+          
+          sudo docker pull $IMAGE_NAME:$IMAGE_TAG
+          sudo docker run -d --network kdbe -p 8761:8761 --name $CONTAINER_NAME $IMAGE_NAME:$IMAGE_TAG  
+          
+      
+        
