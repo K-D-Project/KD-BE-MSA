@@ -64,17 +64,21 @@ jobs:
         script: |
           IMAGE_NAME="kimkagyun/discovery"
           IMAGE_TAG="latest"
-          if [ "$(sudo docker images -q $IMAGE_NAME:$IMAGE_TAG )" ]; then
-              sudo docker rmi $IMAGE_NAME:$IMAGE_TAG
-          fi
-          sudo docker pull $IMAGE_NAME:$IMAGE_TAG
-          
           CONTAINER_NAME=discovery
+
           if [ "$(sudo docker ps -q -f name=$CONTAINER_NAME)" ]; then
-              echo "컨테이너가 이미 실행 중입니다. 제거 중..."
               sudo docker stop $CONTAINER_NAME
               sudo docker rm $CONTAINER_NAME
           fi
-          sudo docker run -d -p 8761:8761 --name $CONTAINER_NAME $IMAGE_NAME:$IMAGE_TAG
+          
+          if [ "$(sudo docker images -q $IMAGE_NAME:$IMAGE_TAG )" ]; then
+              sudo docker rmi $IMAGE_NAME:$IMAGE_TAG
+          fi
+          
+          sudo docker pull $IMAGE_NAME:$IMAGE_TAG
+          sudo docker run -d -p 8761:8761 --name $CONTAINER_NAME $IMAGE_NAME:$IMAGE_TAG  
+          
+      
+        
 
 
