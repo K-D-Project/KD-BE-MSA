@@ -28,7 +28,7 @@ logging:
 
 
 server:
-  port: 9034
+  port: 8081
 
 eureka:
   instance:
