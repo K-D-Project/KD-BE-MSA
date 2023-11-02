@@ -69,6 +69,6 @@ jobs:
               sudo docker stop $CONTAINER_NAME
               sudo docker rm $CONTAINER_NAME
           fi
-          sudo docker run -d -p 80:8080 --name discovery kimkagyun/discovery:latest
+          sudo docker run -d -p 8761:8761 --name discovery kimkagyun/discovery:latest
 
 
