@@ -30,38 +30,30 @@ public class SpaceUiServiceImpl implements SpaceUiService {
                 .uri("http://localhost:9035/spaces/3")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<EntityModel<SpaceDto>>(){});
-        kafkaProducer.send("test",MessageDto.builder()
-                .id(1L)
-                .build());
+                .bodyToMono(new ParameterizedTypeReference<>() {
+                });
 
-        kafkaProducer.send("testSecond",MessageDto.builder()
-                .id(2L)
-                .build());
 
         return Mono.zip(spaceUi, spaceDto)
-                .map(tuple -> {
-                    return UiDomainDto.builder()
-                            .spaceUi(tuple.getT1())
-                            .domain(tuple.getT2().getContent())
-                            .build();
-                });
+                .map(tuple -> UiDomainDto.builder()
+                        .spaceUi(tuple.getT1())
+                        .domain(tuple.getT2().getContent())
+                        .build());
     }
 
     @Override
     public UiDomainDto getSync(int id) {
         SpaceUi spaceUi = spaceUiRepository.findByUuid(id).block();
-        EntityModel<SpaceDto> spaceDto = client.get()
-                .uri("http://localhost:9035/spaces/3")
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<EntityModel<SpaceDto>>(){})
-                .block();
+//        EntityModel<SpaceDto> spaceDto = client.get()
+//                .uri("http://localhost:9035/spaces/3")
+//                .accept(MediaType.APPLICATION_JSON)
+//                .retrieve()
+//                .bodyToMono(new ParameterizedTypeReference<EntityModel<SpaceDto>>(){})
+//                .block();
 
 
         return UiDomainDto.builder()
                 .spaceUi(spaceUi)
-                .domain(spaceDto)
                 .build();
     }
 

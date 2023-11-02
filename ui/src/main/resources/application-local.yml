@@ -15,7 +15,7 @@ spring:
     mongodb:
       host: 54.180.24.185
       port: 27017
-      database: kdbe
+      database: ui
   sql:
     init:
       encoding: UTF-8
