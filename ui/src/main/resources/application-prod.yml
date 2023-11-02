@@ -1,0 +1,40 @@
+app:
+  name: ui
+  version: 1.0.1
+
+
+
+## MongoDB
+spring:
+  application:
+    name: ui
+  cloud:
+    config:
+        enabled: false
+  data:
+    mongodb:
+      host: 54.180.24.185
+      port: 27017
+      database: kdbe
+  sql:
+    init:
+      encoding: UTF-8
+
+
+
+logging:
+  level:
+    com.example.ui: debug
+
+
+server:
+  port: 8081
+
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery:8761/eureka

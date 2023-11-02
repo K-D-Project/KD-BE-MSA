@@ -10,7 +10,7 @@ spring:
     name: ui
   cloud:
     config:
-        enabled: false
+      enabled: false
   data:
     mongodb:
       host: 54.180.24.185
