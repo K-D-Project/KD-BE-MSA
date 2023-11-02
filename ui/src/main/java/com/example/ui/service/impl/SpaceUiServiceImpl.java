@@ -54,6 +54,7 @@ public class SpaceUiServiceImpl implements SpaceUiService {
 
         return UiDomainDto.builder()
                 .spaceUi(spaceUi)
+                .domain(spaceDto)
                 .build();
     }
 
