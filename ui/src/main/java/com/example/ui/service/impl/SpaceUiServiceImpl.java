@@ -27,7 +27,7 @@ public class SpaceUiServiceImpl implements SpaceUiService {
     public Mono<UiDomainDto> getAsync(int id) {
         Mono<SpaceUi> spaceUi = spaceUiRepository.findByUuid(id);
         Mono<EntityModel<SpaceDto>> spaceDto = client.get()
-                .uri("http://localhost:9035/spaces/3")
+                .uri("http://localhost:8082/spaces/3")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<>() {
@@ -44,12 +44,12 @@ public class SpaceUiServiceImpl implements SpaceUiService {
     @Override
     public UiDomainDto getSync(int id) {
         SpaceUi spaceUi = spaceUiRepository.findByUuid(id).block();
-//        EntityModel<SpaceDto> spaceDto = client.get()
-//                .uri("http://localhost:9035/spaces/3")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .retrieve()
-//                .bodyToMono(new ParameterizedTypeReference<EntityModel<SpaceDto>>(){})
-//                .block();
+        EntityModel<SpaceDto> spaceDto = client.get()
+                .uri("http://localhost:8082/spaces/3")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<EntityModel<SpaceDto>>(){})
+                .block();
 
 
         return UiDomainDto.builder()
